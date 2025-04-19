@@ -1,0 +1,28 @@
+int redPin = 9;
+int greenPin = 10;
+int bluePin = 11;
+int buttonPin = 2;
+int potPin = A0;
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+}
+
+void loop() {
+  int potValue = analogRead(potPin);
+  int colorValue = map(potValue, 0, 1023, 0, 255);
+  
+  if(digitalRead(buttonPin) == LOW) {
+    analogWrite(redPin, colorValue);
+    analogWrite(greenPin, 0);
+    analogWrite(bluePin, 0);
+  }
+  else {
+    analogWrite(redPin, 0);
+    analogWrite(greenPin, colorValue);
+    analogWrite(bluePin, colorValue);
+  }
+}
