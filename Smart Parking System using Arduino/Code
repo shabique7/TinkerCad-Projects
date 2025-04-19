@@ -1,0 +1,47 @@
+#include <Servo.h>
+
+Servo gateServo;
+const int trigPin = 2;
+const int echoPin = 3;
+const int servoPin = 9;
+const int ledPin = 13;
+const int buzzerPin = 4;
+const int irSensorPin = 5;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(irSensorPin, INPUT);
+  gateServo.attach(servoPin);
+  Serial.begin(9600);
+  gateServo.write(0);
+}
+
+void loop() {
+  long duration, distance;
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+
+  if (distance < 10) {
+    if (digitalRead(irSensorPin) == LOW) {
+      gateServo.write(90);
+      digitalWrite(ledPin, HIGH);
+      delay(3000);
+    } else {
+      digitalWrite(buzzerPin, HIGH);
+      delay(1000);
+      digitalWrite(buzzerPin, LOW);
+    }
+  } else {
+    gateServo.write(0);
+    digitalWrite(ledPin, LOW);
+  }
+  delay(100);
+}
