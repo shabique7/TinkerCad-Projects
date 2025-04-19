@@ -1,1 +1,27 @@
+const int pirPin = 2;
+const int ledPin = 13;
+unsigned long lastMotionTime = 0;
+const unsigned long motionTimeout = 5000;
 
+void setup() {
+  pinMode(pirPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+  digitalWrite(ledPin, LOW);
+}
+
+void loop() {
+  int motionDetected = digitalRead(pirPin);
+  
+  if (motionDetected == HIGH) {
+    digitalWrite(ledPin, HIGH);
+    lastMotionTime = millis();
+    Serial.println("1");
+  }
+  
+  if (millis() - lastMotionTime > motionTimeout) {
+    digitalWrite(ledPin, LOW);
+  }
+  
+  delay(50);
+}
