@@ -1,0 +1,48 @@
+#include <Servo.h>
+
+Servo horizontal;
+Servo vertical;
+int ldrTL = A0;
+int ldrTR = A1;
+int ldrBL = A2;
+int ldrBR = A3;
+int hPos = 90;
+int vPos = 90;
+int tolerance = 20;
+
+void setup() {
+  horizontal.attach(9);
+  vertical.attach(10);
+  horizontal.write(hPos);
+  vertical.write(vPos);
+  delay(2000);
+}
+
+void loop() {
+  int tl = analogRead(ldrTL);
+  int tr = analogRead(ldrTR);
+  int bl = analogRead(ldrBL);
+  int br = analogRead(ldrBR);
+
+  int avgTop = (tl + tr) / 2;
+  int avgBottom = (bl + br) / 2;
+  int avgLeft = (tl + bl) / 2;
+  int avgRight = (tr + br) / 2;
+
+  int diffTB = avgTop - avgBottom;
+  int diffLR = avgLeft - avgRight;
+
+  if(abs(diffTB) > tolerance) {
+    if(diffTB > 0) vPos++;
+    else vPos--;
+    vertical.write(vPos);
+  }
+
+  if(abs(diffLR) > tolerance) {
+    if(diffLR > 0) hPos--;
+    else hPos++;
+    horizontal.write(hPos);
+  }
+
+  delay(50);
+}
